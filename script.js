@@ -1,20 +1,21 @@
 
 const gameBoard = {
-    board : ["", "", "", "", "", "", "", "", ""],
-}
-
-const player = {
-    takeTurn : function () {
-        gameControl.setBoard();
-    }
+    board : [null, null, null, null, null, null, null, null, null]
 }
 
 const gameControl = {
-    playerInput : "X",
-    setBoard : function () {
-        const randomNo = Math.floor(Math.random() * 9);
-        gameBoard.board.splice(randomNo, 1, this.playerInput);
-        this.playerInput = "O";
+    setBoard : function (input, square) {
+        gameBoard.board.splice(square, 1, input);
         console.log(gameBoard.board);
     }
 }
+
+function createPlayer (name, input) {
+    const takeTurn = function (square) {gameControl.setBoard(input, square);}
+    return {name, input, takeTurn};
+}
+
+const playerOne = createPlayer("Harry", "X");
+const playerTwo = createPlayer("Bob", "O");
+
+
