@@ -1,37 +1,37 @@
 
 const gameBoard = {
-    board : [null, null, null, null, null, null, null, null, null]
+    board : [1, 2, 3, 4, 5, 6, 7, 8, 9]
 }
 
 const gameControl = {
     checkVerticalRows : function (board) {
         if (board[0] === board[3] && board[6]) {
-            alert("Winner");
+            console.log("Winner");
         }
         else if (board[1] === board[4] && board[7]) {
-            alert("Winner");
+            console.log("Winner");
         }
         else if (board[2] === board[5] && board[8]) {
-            alert("Winner");
+            console.log("WinnerV");
         }
     },
     checkHorizontalRows : function (board) {
         if (board[0] === board[1] && board[2]) {
-            alert("Winner");
+            console.log("Winner");
         }
         else if (board[3] === board[4] && board[5]) {
-            alert("Winner");
+            console.log("Winner");
         }
         else if (board[6] === board[7] && board[8]) {
-            alert("Winner");
+            console.log("WinnerH");
         }
     },
     checkDiagonalRows : function (board) {
-        if (board[0] === board[4] && board[8]) {
-            console.log("Winner");
+        if ((board[0] === board[4]) && (board[0] === board[8])) {
+            console.log("WinnerD");
         }
         else if (board[2] === board[4] && board[6]) {
-            alert("Winner");
+            console.log("Winner");
         }
     },
     setBoard : function (input, square) {
@@ -51,4 +51,6 @@ function createPlayer (name, input) {
 const playerOne = createPlayer("Harry", "X");
 const playerTwo = createPlayer("Bob", "O");
 
-
+playerOne.takeTurn(0);
+playerOne.takeTurn(4);
+playerOne.takeTurn(8);
