@@ -81,29 +81,25 @@ function createPlayer (name, input) {
     return {name, input, takeTurn};
 }
 
-(function () {
+const dom = (function () {
 
-    dom = {
-        init : function () {
-            this.cacheDom();
-            this.createBoard();
-        },
-        cacheDom : function () {
-            this.gameBoard = document.querySelector(".board_container");
-            this.inputPlayerOne = document.querySelector("#player_one");
-            this.inputPlayerTwo = document.querySelector("#player_two");
-        },
-        createBoard : function () {
-            const boardSquare = document.createElement("div");
-            boardSquare.setAttribute("class", "board_square");
-            this.gameBoard.appendChild(boardSquare);
-            console.log("Hi");
-        },
-    }
+    const gameBoard = document.querySelector(".board_container");
+    const inputPlayerOne = document.querySelector("#player_one");
+    const inputPlayerTwo = document.querySelector("#player_two");
+    
+    const createBoard = function () {
+        const boardSquare = document.createElement("div");
+        boardSquare.setAttribute("class", ".board_square");
+        gameBoard.appendChild(boardSquare);
+        }
 
-    dom.init();
+   createBoard();
 
 })();
+
+
+
+
 
 const playerOne = createPlayer("Harry", "X");
 const playerTwo = createPlayer("Bob", "O");
