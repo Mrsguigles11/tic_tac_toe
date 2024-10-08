@@ -1,5 +1,5 @@
 
-const gameBoard = (function () {
+const game = (function () {
    let board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
    return {board};
 })();
@@ -9,15 +9,15 @@ const gameControl = (function () {
     let turnCount = 0;
 
     const winSequence = function(index) {
-        if (gameBoard.board[index] === "X") {
+        if (game.board[index] === "X") {
             console.log("You Win " + playerOne.name);
             turnCount = 0;
-            gameBoard.board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+            game.board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
         }
         else {
             console.log("You Win" + playerTwo.name);
             turnCount = 0;
-            gameBoard.board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+            game.board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
         }
     }
 
@@ -57,18 +57,18 @@ const gameControl = (function () {
         }
     }
     const setBoard = function (input, square) {
-        if (typeof(gameBoard.board[square]) === "string") {
+        if (typeof(game.board[square]) === "string") {
             console.log("Already moved there!");
             return;
         }
         else {
-        gameBoard.board.splice(square, 1, input);
-        console.log(gameBoard.board);
-        checkVerticalRows(gameBoard.board);
-        checkHorizontalRows(gameBoard.board);
-        checkDiagonalRows(gameBoard.board);
+        game.board.splice(square, 1, input);
+        console.log(game.board);
+        checkVerticalRows(game.board);
+        checkHorizontalRows(game.board);
+        checkDiagonalRows(game.board);
         turnCount++;
-        checkForDraw(gameBoard.board); 
+        checkForDraw(game.board); 
         }
     }
 
@@ -80,6 +80,30 @@ function createPlayer (name, input) {
     const takeTurn = function (square) {gameControl.setBoard(input, square);}
     return {name, input, takeTurn};
 }
+
+(function () {
+
+    dom = {
+        init : function () {
+            this.cacheDom();
+            this.createBoard();
+        },
+        cacheDom : function () {
+            this.gameBoard = document.querySelector(".board_container");
+            this.inputPlayerOne = document.querySelector("#player_one");
+            this.inputPlayerTwo = document.querySelector("#player_two");
+        },
+        createBoard : function () {
+            const boardSquare = document.createElement("div");
+            boardSquare.setAttribute("class", "board_square");
+            this.gameBoard.appendChild(boardSquare);
+            console.log("Hi");
+        },
+    }
+
+    dom.init();
+
+})();
 
 const playerOne = createPlayer("Harry", "X");
 const playerTwo = createPlayer("Bob", "O");
