@@ -1,0 +1,27 @@
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.board_container {
+    width: 50vw;
+    height: 50vh;
+    border: 2px solid black;
+    display: grid;
+    grid-template: repeat(3, 1fr) / repeat(3,1fr);
+}
+
+.board_square {
+    border: 1px solid black;
+}
