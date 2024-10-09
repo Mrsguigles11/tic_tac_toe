@@ -70,7 +70,7 @@ const gameControl = (function () {
         checkDiagonalRows(game.board);
         turnCount++;
         checkForDraw(game.board); 
-        dom.createBoard();
+        dom.displayBoard();
         }
     }
 
@@ -83,8 +83,21 @@ const dom = (function () {
     const gameBoard = document.querySelector(".board_container");
     const inputPlayerOne = document.querySelector("#player_one");
     const inputPlayerTwo = document.querySelector("#player_two");
+    const buttonPlayerOne = document.querySelector("#button_player_one");
+    const buttonPlayerTwo = document.querySelector("#button_player_two");
+
+    const submitButtonEvents = function () {
+        buttonPlayerOne.addEventListener('click', () => { 
+            createPlayer(inputPlayerOne.value, "X");
+            inputPlayerOne.value = "";
+        });
+        buttonPlayerTwo.addEventListener('click', () => { 
+            createPlayer(inputPlayerTwo.value, "X");
+            inputPlayerTwo.value = "";
+        });
+    }
     
-    const createBoard = function () {
+    const displayBoard = function () {
         gameBoard.innerHTML = "";
         for (const square of game.board) {
         const boardSquare = document.createElement("div");
@@ -96,8 +109,9 @@ const dom = (function () {
         }
         }
 
-   createBoard();
-   return{createBoard};
+   displayBoard();
+   submitButtonEvents();
+   return{displayBoard};
 
 })();
 
