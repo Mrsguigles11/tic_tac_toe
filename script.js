@@ -4,6 +4,7 @@ const game = (function () {
    return {board};
 })();
 
+
 const gameControl = (function () {
 
     let turnCount = 0;
@@ -69,17 +70,13 @@ const gameControl = (function () {
         checkDiagonalRows(game.board);
         turnCount++;
         checkForDraw(game.board); 
+        dom.createBoard();
         }
     }
 
     return{setBoard};
 
 })();
-
-function createPlayer (name, input) {
-    const takeTurn = function (square) {gameControl.setBoard(input, square);}
-    return {name, input, takeTurn};
-}
 
 const dom = (function () {
 
@@ -88,17 +85,26 @@ const dom = (function () {
     const inputPlayerTwo = document.querySelector("#player_two");
     
     const createBoard = function () {
+        gameBoard.innerHTML = "";
+        for (const square of game.board) {
         const boardSquare = document.createElement("div");
-        boardSquare.setAttribute("class", ".board_square");
+        boardSquare.setAttribute("class", "board_square");
+        if (typeof(square) === 'string') {
+            boardSquare.textContent = square;
+        }
         gameBoard.appendChild(boardSquare);
+        }
         }
 
    createBoard();
+   return{createBoard};
 
 })();
 
-
-
+function createPlayer (name, input) {
+    const takeTurn = function (square) {gameControl.setBoard(input, square);}
+    return {name, input, takeTurn};
+}
 
 
 const playerOne = createPlayer("Harry", "X");
