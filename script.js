@@ -86,7 +86,7 @@ const dom = (function () {
     const buttonPlayerOne = document.querySelector("#button_player_one");
     const buttonPlayerTwo = document.querySelector("#button_player_two");
 
-    const submitButtonEvents = function () {
+    const bindEvents = function () {
         buttonPlayerOne.addEventListener('click', () => { 
             createPlayer(inputPlayerOne.value, "X");
             inputPlayerOne.value = "";
@@ -110,7 +110,7 @@ const dom = (function () {
         }
 
    displayBoard();
-   submitButtonEvents();
+   bindEvents();
    return{displayBoard};
 
 })();
