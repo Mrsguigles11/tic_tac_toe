@@ -1,9 +1,14 @@
 
-const game = (function () {
-   let board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-   return {board};
-})();
+const game = {
+   board : [0, 1, 2, 3, 4, 5, 6, 7, 8],
+   playerOne : "",
+   playerTwo : "",
+};
 
+function createPlayer (name, input) {
+    const takeTurn = function (square) {gameControl.setBoard(input, square);}
+    return {name, input, takeTurn};
+}
 
 const gameControl = (function () {
 
@@ -11,12 +16,12 @@ const gameControl = (function () {
 
     const winSequence = function(index) {
         if (game.board[index] === "X") {
-            console.log("You Win " + playerOne.name);
+            console.log("You Win " + game.playerOne.name);
             turnCount = 0;
             game.board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
         }
         else {
-            console.log("You Win" + playerTwo.name);
+            console.log("You Win" + game.playerTwo.name);
             turnCount = 0;
             game.board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
         }
@@ -33,6 +38,7 @@ const gameControl = (function () {
             winSequence(2);
         }
     }
+
     const checkHorizontalRows = function (board) {
         if ((board[0] === board[1]) && (board[0] === board[2])) {
             winSequence(0);
@@ -44,6 +50,7 @@ const gameControl = (function () {
             winSequence(6);
         }
     }
+
     const checkDiagonalRows = function (board) {
         if ((board[0] === board[4]) && (board[0] === board[8])) {
             winSequence(0);
@@ -52,11 +59,13 @@ const gameControl = (function () {
             winSequence(2);
         }
     }
+
     const checkForDraw = function (board) {
         if (turnCount === 9) {
             console.log("Its a draw");
         }
     }
+
     const setBoard = function (input, square) {
         if (typeof(game.board[square]) === "string") {
             console.log("Already moved there!");
@@ -74,7 +83,16 @@ const gameControl = (function () {
         }
     }
 
-    return{setBoard};
+    const playerTurn = function (square) {
+        if (turnCount % 2 === 0) {
+            game.playerOne.takeTurn(square);
+        }
+        else {
+            game.playerTwo.takeTurn(square);
+        }
+    }
+
+    return{setBoard, playerTurn};
 
 })();
 
@@ -88,11 +106,11 @@ const dom = (function () {
 
     const bindEvents = function () {
         buttonPlayerOne.addEventListener('click', () => { 
-            createPlayer(inputPlayerOne.value, "X");
+            game.playerOne = createPlayer(inputPlayerOne.value, "X");
             inputPlayerOne.value = "";
         });
         buttonPlayerTwo.addEventListener('click', () => { 
-            createPlayer(inputPlayerTwo.value, "X");
+            game.playerTwo = createPlayer(inputPlayerTwo.value, "O");
             inputPlayerTwo.value = "";
         });
     }
@@ -105,6 +123,9 @@ const dom = (function () {
         if (typeof(square) === 'string') {
             boardSquare.textContent = square;
         }
+        boardSquare.addEventListener('click', () => {
+            gameControl.playerTurn(game.board.indexOf(square));
+        })
         gameBoard.appendChild(boardSquare);
         }
         }
@@ -115,13 +136,6 @@ const dom = (function () {
 
 })();
 
-function createPlayer (name, input) {
-    const takeTurn = function (square) {gameControl.setBoard(input, square);}
-    return {name, input, takeTurn};
-}
 
-
-const playerOne = createPlayer("Harry", "X");
-const playerTwo = createPlayer("Bob", "O");
 
 
