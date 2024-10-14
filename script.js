@@ -61,7 +61,7 @@ const gameControl = (function () {
         }
     }
 
-    const checkForDraw = function (board) {
+    const checkForDraw = function () {
         if (game.turnCount === 9) {
             gameStateDisplay.textContent = "It's a draw!";
             game.turnCount = 0;
@@ -76,12 +76,12 @@ const gameControl = (function () {
         else {
         gameStateDisplay.textContent = "";
         game.board.splice(square, 1, input);
+        dom.displayBoard();
+        game.turnCount++;
         checkVerticalRows(game.board);
         checkHorizontalRows(game.board);
         checkDiagonalRows(game.board);
-        game.turnCount++;
         checkForDraw(game.board); 
-        dom.displayBoard();
         }
     }
 
@@ -90,12 +90,13 @@ const gameControl = (function () {
             gameStateDisplay.textContent = "Must enter two player names!";
         }
         else if (game.turnCount % 2 === 0) {
-            gameStateDisplay.textContent = "";
             game.playerOne.takeTurn(square);
+            console.log(square);
             
         }
         else {
             game.playerTwo.takeTurn(square);
+            console.log(square);
         }
     }
 
@@ -134,14 +135,14 @@ const dom = (function () {
     
     const displayBoard = function () {
         gameBoard.innerHTML = "";
-        for (const square of game.board) {
+        for (let i = 0; i < 9; i++) {
         const boardSquare = document.createElement("div");
         boardSquare.setAttribute("class", "board_square");
-        if (typeof(square) === 'string') {
-            boardSquare.textContent = square;
+        if (typeof(game.board[i]) === 'string') {
+            boardSquare.textContent = game.board[i];
         }
         boardSquare.addEventListener('click', () => {
-            gameControl.clickSquare(game.board.indexOf(square));
+            gameControl.clickSquare(i);
         })
         gameBoard.appendChild(boardSquare);
         }
