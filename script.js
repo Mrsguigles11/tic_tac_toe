@@ -13,15 +13,16 @@ function createPlayer (name, input) {
 const gameControl = (function () {
 
     let turnCount = 0;
+    const gameStateDisplay = document.querySelector("#game_state");
 
-    const winSequence = function(index) {
+    const displayWinner = function(index) {
         if (game.board[index] === "X") {
-            console.log("You Win " + game.playerOne.name);
+            gameStateDisplay.textContent = "You Win " + game.playerOne.name + "!";
             turnCount = 0;
             game.board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
         }
         else {
-            console.log("You Win" + game.playerTwo.name);
+            gameStateDisplay.textContent = "You Win " + game.playerTwo.name + "!";
             turnCount = 0;
             game.board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
         }
@@ -29,51 +30,52 @@ const gameControl = (function () {
 
     const checkVerticalRows = function (board) {
         if ((board[0] === board[3]) && (board[0] === board[6])) {
-            winSequence(0);
+            displayWinner(0);
         }
         else if ((board[1] === board[4]) && (board[1] === board[7])) {
-            winSequence(1);
+            displayWinner(1);
         }
         else if ((board[2] === board[5]) && (board[2] === board[8])) {
-            winSequence(2);
+            displayWinner(2);
         }
     }
 
     const checkHorizontalRows = function (board) {
         if ((board[0] === board[1]) && (board[0] === board[2])) {
-            winSequence(0);
+            displayWinner(0);
         }
         else if ((board[3] === board[4]) && (board[3] === board[5])) {
-            winSequence(3);
+            displayWinner(3);
         }
         else if ((board[6] === board[7]) && (board[6] === board[8])) {
-            winSequence(6);
+            displayWinner(6);
         }
     }
 
     const checkDiagonalRows = function (board) {
         if ((board[0] === board[4]) && (board[0] === board[8])) {
-            winSequence(0);
+            displayWinner(0);
         }
         else if ((board[2] === board[4]) && (board[2] === board[6])) {
-            winSequence(2);
+            displayWinner(2);
         }
     }
 
     const checkForDraw = function (board) {
         if (turnCount === 9) {
-            console.log("Its a draw");
+            gameStateDisplay.textContent = "It's a draw!";
+            turnCount = 0;
+            game.board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
         }
     }
 
     const setBoard = function (input, square) {
         if (typeof(game.board[square]) === "string") {
-            console.log("Already moved there!");
-            return;
+            gameStateDisplay.textContent = "Already moved there!";
         }
         else {
+        gameStateDisplay.textContent = "";
         game.board.splice(square, 1, input);
-        console.log(game.board);
         checkVerticalRows(game.board);
         checkHorizontalRows(game.board);
         checkDiagonalRows(game.board);
@@ -83,19 +85,21 @@ const gameControl = (function () {
         }
     }
 
-    const playerTurn = function (square) {
+    const clickSquare = function (square) {
         if ((game.playerOne === "") || (game.playerTwo === "")) {
-            alert("Must enter two player names!")
+            gameStateDisplay.textContent = "Must enter two player names!";
         }
         else if (turnCount % 2 === 0) {
+            gameStateDisplay.textContent = "";
             game.playerOne.takeTurn(square);
+            
         }
         else {
             game.playerTwo.takeTurn(square);
         }
     }
 
-    return{setBoard, playerTurn};
+    return{setBoard, clickSquare};
 
 })();
 
@@ -112,12 +116,12 @@ const dom = (function () {
     const bindEvents = function () {
         buttonPlayerOne.addEventListener('click', () => { 
             game.playerOne = createPlayer(inputPlayerOne.value, "X");
-            playerOneNameDisplay.textContent = "Noughts: " + inputPlayerOne.value;
+            playerOneNameDisplay.textContent = "Crosses: " + inputPlayerOne.value;
             inputPlayerOne.value = "";
         });
         buttonPlayerTwo.addEventListener('click', () => { 
             game.playerTwo = createPlayer(inputPlayerTwo.value, "O");
-            playerTwoNameDisplay.textContent = "Crosses: " + inputPlayerTwo.value;
+            playerTwoNameDisplay.textContent = "Noughts: " + inputPlayerTwo.value;
             inputPlayerTwo.value = "";
         });
     }
@@ -131,7 +135,7 @@ const dom = (function () {
             boardSquare.textContent = square;
         }
         boardSquare.addEventListener('click', () => {
-            gameControl.playerTurn(game.board.indexOf(square));
+            gameControl.clickSquare(game.board.indexOf(square));
         })
         gameBoard.appendChild(boardSquare);
         }
