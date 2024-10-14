@@ -84,7 +84,10 @@ const gameControl = (function () {
     }
 
     const playerTurn = function (square) {
-        if (turnCount % 2 === 0) {
+        if ((game.playerOne === "") || (game.playerTwo === "")) {
+            alert("Must enter two player names!")
+        }
+        else if (turnCount % 2 === 0) {
             game.playerOne.takeTurn(square);
         }
         else {
@@ -103,14 +106,18 @@ const dom = (function () {
     const inputPlayerTwo = document.querySelector("#player_two");
     const buttonPlayerOne = document.querySelector("#button_player_one");
     const buttonPlayerTwo = document.querySelector("#button_player_two");
+    const playerOneNameDisplay = document.querySelector("#player_one_name");
+    const playerTwoNameDisplay = document.querySelector("#player_two_name");
 
     const bindEvents = function () {
         buttonPlayerOne.addEventListener('click', () => { 
             game.playerOne = createPlayer(inputPlayerOne.value, "X");
+            playerOneNameDisplay.textContent = "Noughts: " + inputPlayerOne.value;
             inputPlayerOne.value = "";
         });
         buttonPlayerTwo.addEventListener('click', () => { 
             game.playerTwo = createPlayer(inputPlayerTwo.value, "O");
+            playerTwoNameDisplay.textContent = "Crosses: " + inputPlayerTwo.value;
             inputPlayerTwo.value = "";
         });
     }
