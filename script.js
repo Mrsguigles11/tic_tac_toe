@@ -13,128 +13,105 @@ function createPlayer (name, input) {
 
 const gameControl = (function () {
 
-    const gameStateDisplay = document.querySelector("#game_state");
-
     const displayWinner = function(index) {
         if (game.board[index] === "X") {
-            gameStateDisplay.textContent = "You Win " + game.playerOne.name + "!";
-            game.turnCount = 0;
-            game.board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+            dom.changeGameStateDisplay("You Win " + game.playerOne.name + "!");
+            dom.resetBoard();
         }
         else {
-            gameStateDisplay.textContent = "You Win " + game.playerTwo.name + "!";
-            game.turnCount = 0;
-            game.board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+            dom.changeGameStateDisplay("You Win " + game.playerTwo.name + "!");
+            dom.resetBoard();
         }
     }
 
-    const checkVerticalRows = function (board) {
-        if ((board[0] === board[3]) && (board[0] === board[6])) {
+    const checkForWinner = function (board) {
+        // Vertical Rows //
+        if (board[0] === board[3] && board[0] === board[6]) {
             displayWinner(0);
         }
-        else if ((board[1] === board[4]) && (board[1] === board[7])) {
+        else if (board[1] === board[4] && board[1] === board[7]) {
             displayWinner(1);
         }
-        else if ((board[2] === board[5]) && (board[2] === board[8])) {
+        else if (board[2] === board[5] && board[2] === board[8]) {
             displayWinner(2);
         }
-    }
-
-    const checkHorizontalRows = function (board) {
-        if ((board[0] === board[1]) && (board[0] === board[2])) {
+        // Horizontal Rows //
+        else if (board[0] === board[1] && board[0] === board[2]) {
             displayWinner(0);
         }
-        else if ((board[3] === board[4]) && (board[3] === board[5])) {
+        else if (board[3] === board[4] && board[3] === board[5]) {
             displayWinner(3);
         }
-        else if ((board[6] === board[7]) && (board[6] === board[8])) {
+        else if (board[6] === board[7] && board[6] === board[8]) {
             displayWinner(6);
         }
-    }
-
-    const checkDiagonalRows = function (board) {
-        if ((board[0] === board[4]) && (board[0] === board[8])) {
+        // Diagonal Rows //
+        else if (board[0] === board[4] && board[0] === board[8]) {
             displayWinner(0);
         }
-        else if ((board[2] === board[4]) && (board[2] === board[6])) {
+        else if (board[2] === board[4] && board[2] === board[6]) {
             displayWinner(2);
         }
     }
 
     const checkForDraw = function () {
         if (game.turnCount === 9) {
-            gameStateDisplay.textContent = "It's a draw!";
-            game.turnCount = 0;
-            game.board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+            dom.changeGameStateDisplay("It's a draw!");
+            dom.resetBoard();
         }
     }
 
     const setBoard = function (input, square) {
         if (typeof(game.board[square]) === "string") {
-            gameStateDisplay.textContent = "Already moved there!";
+            dom.changeGameStateDisplay("Already moved there!");
         }
         else {
-        gameStateDisplay.textContent = "";
+        dom.changeGameStateDisplay("");
         game.board.splice(square, 1, input);
         dom.displayBoard();
         game.turnCount++;
-        checkVerticalRows(game.board);
-        checkHorizontalRows(game.board);
-        checkDiagonalRows(game.board);
+        checkForWinner(game.board);
         checkForDraw(game.board); 
         }
     }
 
-    const clickSquare = function (square) {
-        if ((game.playerOne === "") || (game.playerTwo === "")) {
-            gameStateDisplay.textContent = "Must enter two player names!";
-        }
-        else if (game.turnCount % 2 === 0) {
-            game.playerOne.takeTurn(square);
-            console.log(square);
-            
-        }
-        else {
-            game.playerTwo.takeTurn(square);
-            console.log(square);
-        }
-    }
-
-    return{setBoard, clickSquare};
+    return{setBoard};
 
 })();
 
 const dom = (function () {
 
-    const gameBoard = document.querySelector(".board_container");
-    const inputPlayerOne = document.querySelector("#player_one");
-    const inputPlayerTwo = document.querySelector("#player_two");
-    const buttonPlayerOne = document.querySelector("#button_player_one");
-    const buttonPlayerTwo = document.querySelector("#button_player_two");
-    const playerOneNameDisplay = document.querySelector("#player_one_name");
-    const playerTwoNameDisplay = document.querySelector("#player_two_name");
-    const resetButton = document.querySelector(".reset_button");
+    const cacheDom = {
+        gameBoard : document.querySelector(".board_container"),
+        inputPlayerOne : document.querySelector("#player_one"),
+        inputPlayerTwo : document.querySelector("#player_two"),
+        buttonPlayerOne : document.querySelector("#button_player_one"),
+        buttonPlayerTwo : document.querySelector("#button_player_two"),
+        playerOneNameDisplay : document.querySelector("#player_one_name"),
+        playerTwoNameDisplay : document.querySelector("#player_two_name"),
+        resetButton : document.querySelector(".reset_button"), 
+        gameStateDisplay : document.querySelector("#game_state"),
+    }
 
     const bindEvents = function () {
-        buttonPlayerOne.addEventListener('click', () => { 
-            game.playerOne = createPlayer(inputPlayerOne.value, "X");
-            playerOneNameDisplay.textContent = "Crosses: " + inputPlayerOne.value;
-            inputPlayerOne.value = "";
+        cacheDom.buttonPlayerOne.addEventListener('click', () => { 
+            game.playerOne = createPlayer(cacheDom.inputPlayerOne.value, "X");
+            cacheDom.playerOneNameDisplay.textContent = "Crosses: " + cacheDom.inputPlayerOne.value;
+            cacheDom.inputPlayerOne.value = "";
         });
-        buttonPlayerTwo.addEventListener('click', () => { 
-            game.playerTwo = createPlayer(inputPlayerTwo.value, "O");
-            playerTwoNameDisplay.textContent = "Noughts: " + inputPlayerTwo.value;
-            inputPlayerTwo.value = "";
+        cacheDom.buttonPlayerTwo.addEventListener('click', () => { 
+            game.playerTwo = createPlayer(cacheDom.inputPlayerTwo.value, "O");
+            cacheDom.playerTwoNameDisplay.textContent = "Noughts: " + cacheDom.inputPlayerTwo.value;
+            cacheDom.inputPlayerTwo.value = "";
         });
-        resetButton.addEventListener('click', () => {
-            game.turnCount = 0;
-            game.board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+        cacheDom.resetButton.addEventListener('click', () => {
+            dom.resetBoard();
             displayBoard();
         })
     }
     
     const displayBoard = function () {
-        gameBoard.innerHTML = "";
+        cacheDom.gameBoard.innerHTML = "";
         for (let i = 0; i < 9; i++) {
         const boardSquare = document.createElement("div");
         boardSquare.setAttribute("class", "board_square");
@@ -142,15 +119,33 @@ const dom = (function () {
             boardSquare.textContent = game.board[i];
         }
         boardSquare.addEventListener('click', () => {
-            gameControl.clickSquare(i);
+            if ((game.playerOne === "") || (game.playerTwo === "")) {
+                cacheDom.gameStateDisplay.textContent = "Must enter two player names!";
+            }
+            else if (game.turnCount % 2 === 0) {
+                game.playerOne.takeTurn(i);
+                
+            }
+            else {
+                game.playerTwo.takeTurn(i);
+            }
         })
-        gameBoard.appendChild(boardSquare);
+        cacheDom.gameBoard.appendChild(boardSquare);
         }
         }
+    
+    const resetBoard = () => {
+        game.turnCount = 0;
+        game.board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+    }
+
+    const changeGameStateDisplay = (text) => {
+        cacheDom.gameStateDisplay.textContent = text;
+    }
 
    displayBoard();
    bindEvents();
-   return{displayBoard};
+   return{displayBoard, resetBoard, changeGameStateDisplay};
 
 })();
 
