@@ -13,67 +13,50 @@ function createPlayer (name, input) {
 
 const gameControl = (function () {
 
-    const displayWinner = function(index) {
-        if (game.board[index] === "X") {
-            dom.changeGameStateDisplay("You Win " + game.playerOne.name + "!");
-            dom.resetBoard();
-        }
-        else {
-            dom.changeGameStateDisplay("You Win " + game.playerTwo.name + "!");
-            dom.resetBoard();
-        }
-    }
-
     const checkForWinner = function (board) {
         // Vertical Rows //
         if (board[0] === board[3] && board[0] === board[6]) {
-            displayWinner(0);
+            dom.displayWinner(0);
         }
         else if (board[1] === board[4] && board[1] === board[7]) {
-            displayWinner(1);
+            dom.displayWinner(1);
         }
         else if (board[2] === board[5] && board[2] === board[8]) {
-            displayWinner(2);
+            dom.displayWinner(2);
         }
         // Horizontal Rows //
         else if (board[0] === board[1] && board[0] === board[2]) {
-            displayWinner(0);
+            dom.displayWinner(0);
         }
         else if (board[3] === board[4] && board[3] === board[5]) {
-            displayWinner(3);
+            dom.displayWinner(3);
         }
         else if (board[6] === board[7] && board[6] === board[8]) {
-            displayWinner(6);
+            dom.displayWinner(6);
         }
         // Diagonal Rows //
         else if (board[0] === board[4] && board[0] === board[8]) {
-            displayWinner(0);
+            dom.displayWinner(0);
         }
         else if (board[2] === board[4] && board[2] === board[6]) {
-            displayWinner(2);
+            dom.displayWinner(2);
         }
     }
 
     const checkForDraw = function () {
         if (game.turnCount === 9) {
-            dom.changeGameStateDisplay("It's a draw!");
+            dom.displayWinner("draw");
             dom.resetBoard();
         }
     }
 
     const setBoard = function (input, square) {
-        if (typeof(game.board[square]) === "string") {
-            dom.changeGameStateDisplay("Already moved there!");
-        }
-        else {
-        dom.changeGameStateDisplay("");
         game.board.splice(square, 1, input);
         dom.displayBoard();
         game.turnCount++;
         checkForWinner(game.board);
         checkForDraw(game.board); 
         }
-    }
 
     return{setBoard};
 
@@ -122,11 +105,16 @@ const dom = (function () {
             if ((game.playerOne === "") || (game.playerTwo === "")) {
                 cacheDom.gameStateDisplay.textContent = "Must enter two player names!";
             }
+            else if (typeof(game.board[i]) === "string") {
+                cacheDom.gameStateDisplay.textContent = "Already moved there!";
+            }
             else if (game.turnCount % 2 === 0) {
+                cacheDom.gameStateDisplay.textContent = "";
                 game.playerOne.takeTurn(i);
                 
             }
             else {
+                cacheDom.gameStateDisplay.textContent = "";
                 game.playerTwo.takeTurn(i);
             }
         })
@@ -139,13 +127,23 @@ const dom = (function () {
         game.board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
     }
 
-    const changeGameStateDisplay = (text) => {
-        cacheDom.gameStateDisplay.textContent = text;
+    const displayWinner = function(index) {
+        if (index === "draw") {
+            cacheDom.gameStateDisplay.textContent = "It's a draw!";
+        }
+        else if (game.board[index] === "X") {
+            cacheDom.gameStateDisplay.textContent = ("You Win " + game.playerOne.name + "!");
+            dom.resetBoard();
+        }
+        else {
+            cacheDom.gameStateDisplay.textContent = ("You Win " + game.playerTwo.name + "!");
+            dom.resetBoard();
+        }
     }
 
    displayBoard();
    bindEvents();
-   return{displayBoard, resetBoard, changeGameStateDisplay};
+   return{displayBoard, resetBoard, displayWinner};
 
 })();
 
